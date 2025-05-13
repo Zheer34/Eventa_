@@ -1,0 +1,82 @@
+
+
+body {
+    margin: 0;
+    font-family: 'Georgia', cursive;
+    background-color: #fffaf0;
+    color: #2d2d2d;
+  }
+  
+  .hero {
+    background-color: #66a1ff;
+    color: white;
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+    margin: 0;
+  }
+  
+  .hero p {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+  }
+  
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: white;
+    color: #66a1ff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .intro,
+  .features,
+  .mission-vision,
+  .contact {
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+  
+  .feature-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .feature {
+    background-color: #ffe6f0;
+    padding: 1rem;
+    border-radius: 8px;
+    width: 280px;
+  }
+  
+  .columns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .column {
+    width: 300px;
+    text-align: left;
+  }
+  
+  .contact {
+    background-color: #fff0f5;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #66a1ff;
+    color: white;
+  }
+  
+ 

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="Login_Form.css">
+</head>
+<body>
+    <section class="adoption-section">
+        <h1 class="section-title">Register</h1>
+
+        <form action="register.php" method="POST" class="pet-form">
+            <div class="form-group">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" id="username" name="username" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" name="password" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="role" class="form-label">Role:</label>
+                <select id="role" name="role" class="form-input" required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="filter-button">Register</button>
+            </div>
+        </form>
+        <div style="text-align: center; margin-top: 10px;">
+            <p>Already have an account?</p>
+            <a href="login_form.php">
+                <button type="button" class="filter-button">Login</button>
+            </a>
+        </div>
+    </section>
+</body>
+</html>
