@@ -48,11 +48,12 @@ if ($action === 'create' || $action === 'edit') {
     $agenda = json_encode(array_map('sanitizeInput', $_POST['agenda'] ?? []));
     $speakers = json_encode(array_map('sanitizeInput', $_POST['speakers'] ?? []));
     $sponsors = json_encode(array_map('sanitizeInput', $_POST['sponsors'] ?? []));
+    $price = ($_POST['price_type'] === 'paid') ? ($_POST['price'] ?? 0) : 0;
 
     if ($action === 'create') {
         $organizer_username = $_SESSION['username'] ?? 'unknown';
-        $sql = "INSERT INTO events (title, description, date, time, location, image, category, visibility, recurring, agenda, speakers, sponsors, organizer_username)
-                VALUES (:title, :description, :date, :time, :location, :image, :category, :visibility, :recurring, :agenda, :speakers, :sponsors, :organizer_username)";
+        $sql = "INSERT INTO events (title, description, date, time, location, image, category, visibility, recurring, agenda, speakers, sponsors, organizer_username, price)
+                VALUES (:title, :description, :date, :time, :location, :image, :category, :visibility, :recurring, :agenda, :speakers, :sponsors, :organizer_username, :price)";
         $stmt = $pdo->prepare($sql);
         $params = [
             ':title' => $title,
@@ -67,15 +68,17 @@ if ($action === 'create' || $action === 'edit') {
             ':agenda' => $agenda,
             ':speakers' => $speakers,
             ':sponsors' => $sponsors,
-            ':organizer_username' => $organizer_username
+            ':organizer_username' => $organizer_username,
+            ':price' => $price
         ];
         if ($stmt->execute($params)) {
             $message = "Event created successfully.";
+            addNotification($pdo, "A new event '{$title}' has been created by {$organizer_username}.");
         } else {
             $message = "Error creating event.";
         }
     } elseif ($action === 'edit' && $id) {
-        $sql = "UPDATE events SET title=:title, description=:description, date=:date, time=:time, location=:location, category=:category, visibility=:visibility, recurring=:recurring, agenda=:agenda, speakers=:speakers, sponsors=:sponsors";
+        $sql = "UPDATE events SET title=:title, description=:description, date=:date, time=:time, location=:location, category=:category, visibility=:visibility, recurring=:recurring, agenda=:agenda, speakers=:speakers, sponsors=:sponsors, price=:price";
         if ($imagePath) {
             $sql .= ", image=:image";
         }
@@ -93,6 +96,7 @@ if ($action === 'create' || $action === 'edit') {
             ':agenda' => $agenda,
             ':speakers' => $speakers,
             ':sponsors' => $sponsors,
+            ':price' => $price,
             ':id' => $id
         ];
         if ($imagePath) {
@@ -100,6 +104,7 @@ if ($action === 'create' || $action === 'edit') {
         }
         if ($stmt->execute($params)) {
             $message = "Event updated successfully.";
+            addNotification($pdo, "The event '{$title}' has been updated.");
         } else {
             $message = "Error updating event.";
         }
@@ -113,6 +118,11 @@ if (isset($_GET['id'])) {
     $stmt = $pdo->prepare("SELECT * FROM events WHERE id = :id");
     $stmt->execute([':id' => $id]);
     $editEvent = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function addNotification($pdo, $message) {
+    $stmt = $pdo->prepare("INSERT INTO notifications (message) VALUES (:message)");
+    $stmt->execute([':message' => $message]);
 }
 
 ?>
@@ -321,6 +331,25 @@ if (isset($_GET['id'])) {
                     }
                 }
             ?></textarea>
+
+            <label for="price">Is this event free or paid?</label>
+            <select name="price_type" id="price_type" onchange="togglePriceInput()">
+                <option value="free" <?php if (($editEvent['price'] ?? 0) == 0) echo 'selected'; ?>>Free</option>
+                <option value="paid" <?php if (($editEvent['price'] ?? 0) > 0) echo 'selected'; ?>>Paid</option>
+            </select>
+
+            <div id="price_input" style="display: <?php echo (($editEvent['price'] ?? 0) > 0) ? 'block' : 'none'; ?>;">
+                <label for="price">Ticket Price</label>
+                <input type="number" name="price" id="price" step="0.01" min="0" value="<?php echo htmlspecialchars($editEvent['price'] ?? ''); ?>">
+            </div>
+
+            <script>
+            function togglePriceInput() {
+                const priceType = document.getElementById('price_type').value;
+                const priceInput = document.getElementById('price_input');
+                priceInput.style.display = priceType === 'paid' ? 'block' : 'none';
+            }
+            </script>
 
             <div class="form-row" style="margin-top: 10px;">
                 <button type="submit" class="btn"><?php echo $editEvent ? 'Update Event' : 'Create Event'; ?></button>

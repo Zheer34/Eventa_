@@ -1,5 +1,3 @@
-
-
 body {
     margin: 0;
     font-family: 'Georgia', cursive;
@@ -79,4 +77,26 @@ body {
     color: white;
   }
   
- 
+.notification-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+}
+
+.notification-container .notification-box {
+  width: 360px;
+  background: #ffffff;
+  border-left: 6px solid #007bff;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

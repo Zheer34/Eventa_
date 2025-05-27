@@ -31,15 +31,19 @@ if (!$event) {
 // --- PARTICIPATION LOGIC ---
 $participationMsg = '';
 $userParticipating = false;
+$userRole = null;
+
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
-    // Get user id
-    $userStmt = $pdo->prepare("SELECT id FROM users WHERE username = :username");
+    // Get user id and role
+    $userStmt = $pdo->prepare("SELECT id, role FROM users WHERE username = :username");
     $userStmt->execute([':username' => $username]);
     $user = $userStmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
         $user_id = $user['id'];
+        $userRole = $user['role']; // Get the user's role (e.g., 'normal', 'admin', 'event_organizer')
+
         // Check if already participating
         $checkStmt = $pdo->prepare("SELECT * FROM event_participants WHERE user_id = :user_id AND event_id = :event_id");
         $checkStmt->execute([':user_id' => $user_id, ':event_id' => $id]);
@@ -47,7 +51,12 @@ if (isset($_SESSION['username'])) {
 
         // Handle participate POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['participate'])) {
-            if (!$userParticipating) {
+            if ($event['price'] > 0) {
+                // Redirect to payment page for paid events
+                header("Location: payment.php?event_id=" . $id);
+                exit;
+            } else {
+                // Handle free event participation
                 $insertStmt = $pdo->prepare("INSERT INTO event_participants (user_id, event_id) VALUES (:user_id, :event_id)");
                 if ($insertStmt->execute([':user_id' => $user_id, ':event_id' => $id])) {
                     $participationMsg = "You have successfully joined this event!";
@@ -144,6 +153,14 @@ if (isset($_SESSION['username'])) {
             margin-bottom: 15px;
             border-radius: 6px;
         }
+        .error-msg {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
         @media (max-width: 600px) {
             .event-info-grid {
                 grid-template-columns: 1fr;
@@ -190,6 +207,10 @@ if (isset($_SESSION['username'])) {
                 <div class="event-info-label">Recurring:</div>
                 <div><?php echo htmlspecialchars($event['recurring']); ?></div>
             </div>
+            <div>
+                <div class="event-info-label">Price:</div>
+                <div><?php echo $event['price'] > 0 ? '$' . number_format($event['price'], 2) : 'Free'; ?></div>
+            </div>
         </div>
         <div class="event-section-card">
             <h3>Description</h3>
@@ -235,14 +256,23 @@ if (isset($_SESSION['username'])) {
             </ul>
         </div>
         <a href="events.html" class="btn">Back to Events</a>
-        <a href="event_form.php?id=<?php echo $event['id']; ?>" class="btn">Edit Event</a>
-        <?php if (isset($_SESSION['username'])): ?>
+        <?php if (isset($_SESSION['username']) && $_SESSION['username'] === $event['organizer_username']): ?>
+            <a href="event_form.php?id=<?php echo $event['id']; ?>" class="btn">Edit Event</a>
+        <?php endif; ?>
+        <?php if (isset($_SESSION['username']) && $userRole === 'user'): ?>
             <form method="post" style="display:inline;">
                 <button type="submit" name="participate" class="btn" <?php if ($userParticipating) echo 'disabled'; ?>>
                     <?php echo $userParticipating ? 'Participating' : 'Participate'; ?>
                 </button>
             </form>
-            
+        <?php elseif (!isset($_SESSION['username'])): ?>
+            <div class="error-msg">
+                You need to log in to participate in this event.
+            </div>
+        <?php elseif ($userRole !== 'user'): ?>
+            <div class="error-msg">
+                Only normal users can participate in events.
+            </div>
         <?php endif; ?>
     </div>
 </body>

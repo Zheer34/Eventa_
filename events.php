@@ -18,23 +18,39 @@ try {
 $message = '';
 $action = $_POST['action'] ?? '';
 
-// Get search term from GET parameter
-$searchTerm = $_GET['search'] ?? '';
+// Function to add notifications
+function addNotification($pdo, $message) {
+    $stmt = $pdo->prepare("INSERT INTO notifications (message) VALUES (:message)");
+    $stmt->execute([':message' => $message]);
+}
 
+// Handle delete action
 if ($action === 'delete') {
     $id = $_POST['id'] ?? null;
     if ($id) {
-        $sql = "DELETE FROM events WHERE id=:id";
-        $stmt = $pdo->prepare($sql);
-        if ($stmt->execute([':id' => $id])) {
-            $message = "Event deleted successfully.";
+        // Fetch the event title before deleting
+        $stmt = $pdo->prepare("SELECT title FROM events WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        $event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($event) {
+            $sql = "DELETE FROM events WHERE id = :id";
+            $stmt = $pdo->prepare($sql);
+            if ($stmt->execute([':id' => $id])) {
+                $message = "Event deleted successfully.";
+                // Add a notification for the deleted event
+                addNotification($pdo, "The event '{$event['title']}' has been canceled.");
+            } else {
+                $message = "Error deleting event.";
+            }
         } else {
-            $message = "Error deleting event.";
+            $message = "Event not found.";
         }
     }
 }
 
 // Fetch events with optional search filter
+$searchTerm = $_GET['search'] ?? '';
 if ($searchTerm) {
     $sql = "SELECT id, title, location, image FROM events WHERE title LIKE :search ORDER BY date, time";
     $stmt = $pdo->prepare($sql);

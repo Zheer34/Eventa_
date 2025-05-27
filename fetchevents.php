@@ -21,11 +21,11 @@ $searchTerm = $_GET['search'] ?? '';
 
 try {
     if ($searchTerm) {
-        $sql = "SELECT id, title, location, image, date, time, category, visibility, recurring, agenda, speakers, sponsors FROM events WHERE title LIKE :search ORDER BY date, time";
+        $sql = "SELECT id, title, location, image, date, time, category, visibility, recurring, agenda, speakers, sponsors, organizer_username FROM events WHERE title LIKE :search ORDER BY date, time";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':search' => '%' . $searchTerm . '%']);
     } else {
-        $sql = "SELECT id, title, location, image, date, time, category, visibility, recurring, agenda, speakers, sponsors FROM events ORDER BY date, time";
+        $sql = "SELECT id, title, location, image, date, time, category, visibility, recurring, agenda, speakers, sponsors, organizer_username FROM events ORDER BY date, time";
         $stmt = $pdo->query($sql);
     }
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);

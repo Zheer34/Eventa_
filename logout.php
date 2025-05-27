@@ -2,6 +2,6 @@
 session_start();
 session_unset();
 session_destroy();
-header("Location: loginForm.html");
+header("Location: SignUp_LogIn_Form.html");
 exit();
 ?>
