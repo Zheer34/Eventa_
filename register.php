@@ -1,14 +1,15 @@
 <?php
+
 session_start();
 
 // Database connection
 $host = 'localhost';
 $dbname = 'eventa';
 $username = 'root';
-$password = '';
+$password = '12345';
 
 try {
-    $pdo = new PDO("mysql:host=$host;port=4307;dbname=$dbname", $username, $password);
+    $pdo = new PDO("mysql:host=$host;port=3306;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
@@ -30,11 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Hash the password
-    $hashedPass = hash('sha256', $pass);
+$hashedPass = hash('sha256', $pass);
+
+// Set verified status based on role
+if ($role === 'admin') {
+    $verified = 'yes';
+} elseif ($role === 'event_organizer') {
+    $verified = 'no';
+} else {
+    $verified = 'yes';
+}
 
     // Insert new user into database
-    $stmt = $pdo->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
-    if ($stmt->execute([$user, $hashedPass, $role])) {
+    $stmt = $pdo->prepare("INSERT INTO users (username, password, role, verified) VALUES (?, ?, ?, ?)");
+    if ($stmt->execute([$user, $hashedPass, $role, $verified])) {
         $_SESSION['success'] = "Registration successful. Please log in.";
         header("Location: SignUp_LogIn_Form.html");
         exit();

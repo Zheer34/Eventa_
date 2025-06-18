@@ -1,14 +1,15 @@
 <?php
+
 session_start();
 
 // Database connection
 $host = 'localhost';
 $dbname = 'eventa';
 $username = 'root';
-$password = '';
+$password = '12345';
 
 try {
-    $pdo = new PDO("mysql:host=$host;port=4307;dbname=$dbname", $username, $password);
+    $pdo = new PDO("mysql:host=$host;port=3306;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
@@ -24,20 +25,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($userData && hash('sha256', $pass) === $userData['password']) {
+        if ($userData['verified'] === 'no') {
+            $_SESSION['error'] = "Your account is not verified yet. Please wait for admin approval.";
+            header("Location: SignUp_LogIn_Form.html");
+            exit();
+        }
+
         // Store user information in the session
-        $_SESSION['user_id'] = $userData['id']; // Add this line to store the user ID
+        $_SESSION['user_id'] = $userData['id'];
         $_SESSION['username'] = $userData['username'];
         $_SESSION['role'] = $userData['role'];
 
-        if ($userData['role'] === 'admin') {
-            header("Location: index.html");
-        } else {
-            header("Location: index.html");
-        }
+        header("Location: index.php");
         exit();
     } else {
         $_SESSION['error'] = "Invalid username or password.";
-        header("Location: SignUp_LogIn_Form.html");  // Redirect to login_form.php for invalid logins
+        header("Location: SignUp_LogIn_Form.html");
         exit();
     }
 }

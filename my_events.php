@@ -3,10 +3,10 @@
 session_start();
 
 $host = 'localhost';
-$port = 4307;
+$port = 3306;
 $dbname = 'eventa';
 $username = 'root';
-$password = '';
+$password = '12345';
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $username, $password);

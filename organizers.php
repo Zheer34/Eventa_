@@ -4,10 +4,10 @@ session_start();
 
 // Database connection configuration
 $host = 'localhost';
-$port = 4307;
+$port = 3306;
 $dbname = 'eventa';
 $username = 'root';
-$password = '';
+$password = '12345';
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $username, $password);
@@ -77,7 +77,7 @@ $organizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
     </div>
     <div style="text-align: center;">
-        <a href="index.html" class="btn-back">Back to Home</a>
+        <a href="Index.php" class="btn-back">Back to Home</a>
     </div>
 </body>
 </html>

@@ -3,10 +3,10 @@ session_start();
 
 // Database connection configuration
 $host = 'localhost';
-$port = 4307;
+$port = 3306;
 $dbname = 'eventa';
 $username = 'root';
-$password = '';
+$password = '12345';
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $username, $password);
@@ -42,7 +42,7 @@ if (isset($_SESSION['username'])) {
 
     if ($user) {
         $user_id = $user['id'];
-        $userRole = $user['role']; // Get the user's role (e.g., 'normal', 'admin', 'event_organizer')
+        $userRole = $user['role']; // Get the user's role (e.g., 'user', 'admin', 'event_organizer')
 
         // Check if already participating
         $checkStmt = $pdo->prepare("SELECT * FROM event_participants WHERE user_id = :user_id AND event_id = :event_id");
@@ -59,10 +59,9 @@ if (isset($_SESSION['username'])) {
                 // Handle free event participation
                 $insertStmt = $pdo->prepare("INSERT INTO event_participants (user_id, event_id) VALUES (:user_id, :event_id)");
                 if ($insertStmt->execute([':user_id' => $user_id, ':event_id' => $id])) {
-                    $participationMsg = "You have successfully joined this event!";
                     $userParticipating = true;
                 } else {
-                    $participationMsg = "Failed to join event. Please try again.";
+                    $participationMsg = "Failed to join the event.";
                 }
             }
         }
@@ -265,6 +264,9 @@ if (isset($_SESSION['username'])) {
                     <?php echo $userParticipating ? 'Participating' : 'Participate'; ?>
                 </button>
             </form>
+            <?php if ($userParticipating): ?>
+                <a href="chat.php?event=<?php echo urlencode($event['title']); ?>" class="btn">Join Chat</a>
+            <?php endif; ?>
         <?php elseif (!isset($_SESSION['username'])): ?>
             <div class="error-msg">
                 You need to log in to participate in this event.

@@ -3,10 +3,10 @@ session_start();
 
 // Database connection configuration
 $host = 'localhost';
-$port = 4307;
+$port = 3306;
 $dbname = 'eventa';
 $username = 'root';
-$password = '';
+$password = '12345';
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $username, $password);
@@ -34,16 +34,23 @@ if ($action === 'create' || $action === 'edit') {
     $recurring = $_POST['recurring'] ?? 'no';
 
     // Handle image upload
-    $imagePath = '';
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $targetDir = "uploads/";
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir, 0755, true);
-        }
-        $imagePath = $targetDir . basename($_FILES["image"]["name"]);
-        move_uploaded_file($_FILES["image"]["tmp_name"], $imagePath);
+// Handle image upload
+$imagePath = '';
+if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+    $targetDir = "uploads/";
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0755, true);
     }
-
+    $fileName = uniqid() . '_' . basename($_FILES["image"]["name"]); // Add unique ID to prevent conflicts
+    $targetPath = $targetDir . $fileName;
+    
+    if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetPath)) {
+        $imagePath = $targetPath; // Store relative path
+    } else {
+        // Handle upload error
+        $message = "Error uploading image.";
+    }
+}
     // Agenda, speakers, sponsors as JSON strings
     $agenda = json_encode(array_map('sanitizeInput', $_POST['agenda'] ?? []));
     $speakers = json_encode(array_map('sanitizeInput', $_POST['speakers'] ?? []));
