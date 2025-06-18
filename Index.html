@@ -12,7 +12,7 @@
   <header class="hero" style="position: relative;">
     <h1>Eventa</h1>
     <p>DO NOT MISS IMPORTANT EVENTS AGAIN</p>
-    <a href="#contact" class="btn">Get in touch</a>
+    <a href="#contact" class="btn" style="position: absolute; top: 1rem; left: 1rem;">Get in touch</a>
     <a href="events.html" class="btn" style="margin-left: 10px;">Events</a>
     <a href="SignUp_LogIn_Form.html" id="auth-link" class="btn" style="position: absolute; top: 1rem; right: 1rem;">Login</a>
     <a href="my_events.php" class="btn">My Events</a>
@@ -24,9 +24,13 @@
         <ul id="notification-list"></ul>
       </div>
     </div>
+    <!-- hero illustration -->
+    <img src="Images/image0.jpg" alt="Event planning illustration" class="hero-img">
   </header>
 
   <section class="intro">
+    <!-- intro illustration -->
+    <img src="Images/image1.jpg" alt="User interface illustration" class="intro-img">
     <h2>User Friendly Interface</h2>
     <p>
       Eventa is going to organize and structure your events with a simple and interactive user interface. In a world full of distractions, we believe in special platforms to help you not miss important events.
@@ -37,14 +41,20 @@
     <h2>Features</h2>
     <div class="feature-boxes">
       <div class="feature">
+        <!-- event management icon -->
+        <img src="Images/image2.jpg" alt="Event management icon" class="feature-icon">
         <h3>Event Management</h3>
         <p>Make, update, remove and edit events; set locations; add details.</p>
       </div>
       <div class="feature">
+        <!-- notifications icon -->
+        <img src="Images/image3.jpg" alt="Notifications icon" class="feature-icon">
         <h3>Notifications & Reminders</h3>
         <p>Email reminders and alerts before events.</p>
       </div>
       <div class="feature">
+        <!-- ticketing icon -->
+        <img src="Images/image4.jpg" alt="Ticketing icon" class="feature-icon">
         <h3>Ticketing</h3>
         <p>Free or paid ticket options with online payment and user tracking.</p>
       </div>
@@ -55,10 +65,14 @@
     <h2>Mission and Vision</h2>
     <div class="columns">
       <div class="column">
+        <!-- mission icon -->
+        <img src="Images/image5.jpg" alt="Mission icon" class="mission-icon">
         <h3>Mission</h3>
         <p>Provide a simple, structured platform for organizing events effectively.</p>
       </div>
       <div class="column">
+        <!-- vision icon -->
+        <img src="Images/image6.jpg" alt="Vision icon" class="vision-icon">
         <h3>Vision</h3>
         <p>Return valuable time to users and increase productivity in a distracted world.</p>
       </div>
@@ -67,6 +81,8 @@
 
   <section class="contact" id="contact">
     <h2>Contact</h2>
+    <!-- productivity illustration -->
+    <img src="Images/image7.jpg" alt="Productivity illustration" class="contact-icon">
     <p>Save your time & increase your productivity</p>
     <p><strong>Phone:</strong> (123) 456-7890</p>
     <p><strong>Email:</strong> hello@reallygreatsite.com</p>
@@ -81,59 +97,52 @@
   </footer>
 
   <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const notificationIcon = document.getElementById('notification-icon');
-    const notificationBox = document.getElementById('notification-box');
-    const notificationList = document.getElementById('notification-list');
+    document.addEventListener('DOMContentLoaded', () => {
+      const notificationIcon = document.getElementById('notification-icon');
+      const notificationBox = document.getElementById('notification-box');
+      const notificationList = document.getElementById('notification-list');
 
-    notificationIcon.addEventListener('click', async () => {
+      notificationIcon.addEventListener('click', async () => {
         notificationBox.style.display = notificationBox.style.display === 'none' ? 'block' : 'none';
-
         if (notificationBox.style.display === 'block') {
-            try {
-                const response = await fetch('fetch_notifications.php');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch notifications');
-                }
-                const notifications = await response.json();
-                notificationList.innerHTML = notifications.map(
-                    notif => `<li>${notif.message} <br><small>${new Date(notif.created_at).toLocaleString()}</small></li>`
-                ).join('');
-            } catch (error) {
-                console.error('Error fetching notifications:', error);
-                notificationList.innerHTML = '<li>Error loading notifications.</li>';
-            }
+          try {
+            const response = await fetch('fetch_notifications.php');
+            if (!response.ok) throw new Error('Failed to fetch notifications');
+            const notifications = await response.json();
+            notificationList.innerHTML = notifications.map(
+              notif => `<li>${notif.message} <br><small>${new Date(notif.created_at).toLocaleString()}</small></li>`
+            ).join('');
+          } catch (error) {
+            console.error('Error fetching notifications:', error);
+            notificationList.innerHTML = '<li>Error loading notifications.</li>';
+          }
         }
-    });
+      });
 
-    // Close the notification box when clicking outside
-    document.addEventListener('click', (event) => {
+      document.addEventListener('click', (event) => {
         if (!notificationBox.contains(event.target) && event.target !== notificationIcon) {
-            notificationBox.style.display = 'none';
+          notificationBox.style.display = 'none';
         }
+      });
     });
-});
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const authLink = document.getElementById('auth-link');
-
-    try {
+    document.addEventListener('DOMContentLoaded', async () => {
+      const authLink = document.getElementById('auth-link');
+      try {
         const response = await fetch('get_user_info.php');
         const userInfo = await response.json();
-
         if (userInfo.username) {
-            authLink.textContent = 'Log Out';
-            authLink.href = 'logout.php';
+          authLink.textContent = 'Log Out';
+          authLink.href = 'logout.php';
         } else {
-            authLink.textContent = 'Login';
-            authLink.href = 'SignUp_LogIn_Form.html';
+          authLink.textContent = 'Login';
+          authLink.href = 'SignUp_LogIn_Form.html';
         }
-    } catch (error) {
+      } catch (error) {
         console.error('Error fetching user info:', error);
-    }
-});
-</script>
+      }
+    });
+  </script>
 
 </body>
 </html>
-

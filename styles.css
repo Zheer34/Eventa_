@@ -1,82 +1,122 @@
 body {
-    margin: 0;
-    font-family: 'Georgia', cursive;
-    background-color: #fffaf0;
-    color: #2d2d2d;
-  }
-  
-  .hero {
-    background-color: #66a1ff;
-    color: white;
-    text-align: center;
-    padding: 3rem 1rem;
-  }
-  
-  .hero h1 {
-    font-size: 3rem;
-    margin: 0;
-  }
-  
-  .hero p {
-    font-size: 1.2rem;
-    margin: 1rem 0;
-  }
-  
-  .btn {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background-color: white;
-    color: #66a1ff;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .intro,
-  .features,
-  .mission-vision,
-  .contact {
-    padding: 2rem 1rem;
-    text-align: center;
-  }
-  
-  .feature-boxes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-  }
-  
-  .feature {
-    background-color: #ffe6f0;
-    padding: 1rem;
-    border-radius: 8px;
-    width: 280px;
-  }
-  
-  .columns {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-  }
-  
-  .column {
-    width: 300px;
-    text-align: left;
-  }
-  
-  .contact {
-    background-color: #fff0f5;
-  }
-  
-  footer {
-    text-align: center;
-    padding: 1rem;
-    background-color: #66a1ff;
-    color: white;
-  }
-  
+  margin: 0;
+  font-family: 'Georgia', cursive;
+  background-color: #fffaf0;
+  color: #2d2d2d;
+}
+
+.hero {
+  background-color: #66a1ff;
+  color: white;
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: white;
+  color: #66a1ff;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.hero-img {
+  width: 400px;
+  display: block;
+  margin: 1.5rem auto 0;
+  border-radius: 10px;  
+}
+
+.intro,
+.features,
+.mission-vision,
+.contact {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+/* intro image */
+.intro-img {
+  width: 400px;
+  display: block;
+  margin: 0 auto 1rem;
+  border-radius: 10px; 
+}
+
+.feature-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.feature {
+  background-color: #9fbdee;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 280px;
+  text-align: center;
+}
+
+/* feature icons */
+.feature-icon {
+  width: 200px;
+  margin-bottom: 0.5rem;
+  border-radius: 10px; 
+}
+
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.column {
+  width: 300px;
+  text-align: left;
+}
+
+/* mission & vision icons */
+.mission-icon,
+.vision-icon {
+  width: 200px;
+  display: block;
+  margin: 0 auto 1rem;
+  border-radius: 10px; 
+}
+
+.contact {
+  background-color: #fff0f5;
+}
+
+/* contact icon */
+.contact-icon {
+  width: 200px;
+  display: block;
+  margin: 0 auto 1rem;
+  border-radius: 10px; 
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #66a1ff;
+  color: white;
+}
+
 .notification-container {
   position: fixed;
   top: 1rem;
