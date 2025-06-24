@@ -53,7 +53,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h1>Manage Users</h1>
         <a href="Index.php" class="btn" style="margin-top: 10px;">Home</a>
     </header>
-    <section class="intro">
+    <section class="intro"> 
         <h2>Search and Manage Users</h2>
         <form method="get" style="margin-bottom: 20px;">
             <input type="text" name="search" placeholder="Search by username" value="<?php echo htmlspecialchars($searchTerm); ?>" style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ccc;">
