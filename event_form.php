@@ -263,6 +263,10 @@ function addNotification($pdo, $message) {
             <input type="hidden" name="action" value="<?php echo $editEvent ? 'edit' : 'create'; ?>">
             <input type="hidden" name="id" value="<?php echo $editEvent['id'] ?? ''; ?>">
 
+            <!-- Hidden fields for visibility and recurring -->
+            <input type="hidden" name="visibility" value="public">
+            <input type="hidden" name="recurring" value="no">
+
             <label for="title">Title</label>
             <input type="text" name="title" id="title" required value="<?php echo htmlspecialchars($editEvent['title'] ?? ''); ?>">
 
@@ -291,23 +295,7 @@ function addNotification($pdo, $message) {
                     <label for="category">Category</label>
                     <input type="text" name="category" id="category" required value="<?php echo htmlspecialchars($editEvent['category'] ?? ''); ?>">
                 </div>
-                <div>
-                    <label for="visibility">Visibility</label>
-                    <select name="visibility" id="visibility" required>
-                        <option value="public" <?php if (($editEvent['visibility'] ?? '') === 'public') echo 'selected'; ?>>Public</option>
-                        <option value="private" <?php if (($editEvent['visibility'] ?? '') === 'private') echo 'selected'; ?>>Private</option>
-                        <option value="invite-only" <?php if (($editEvent['visibility'] ?? '') === 'invite-only') echo 'selected'; ?>>Invite Only</option>
-                    </select>
-                </div>
             </div>
-
-            <label for="recurring">Recurring Event</label>
-            <select name="recurring" id="recurring">
-                <option value="no" <?php if (($editEvent['recurring'] ?? '') === 'no') echo 'selected'; ?>>No</option>
-                <option value="daily" <?php if (($editEvent['recurring'] ?? '') === 'daily') echo 'selected'; ?>>Daily</option>
-                <option value="weekly" <?php if (($editEvent['recurring'] ?? '') === 'weekly') echo 'selected'; ?>>Weekly</option>
-                <option value="monthly" <?php if (($editEvent['recurring'] ?? '') === 'monthly') echo 'selected'; ?>>Monthly</option>
-            </select>
 
             <label>Agenda (one item per line)</label>
             <textarea name="agenda[]" id="agenda" rows="3" placeholder="Enter agenda items separated by new lines"><?php

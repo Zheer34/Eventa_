@@ -199,12 +199,10 @@ if (isset($_SESSION['username'])) {
                 <div><?php echo htmlspecialchars($event['location']); ?></div>
             </div>
             <div>
-                <div class="event-info-label">Visibility:</div>
-                <div><?php echo htmlspecialchars($event['visibility']); ?></div>
+                
             </div>
             <div>
-                <div class="event-info-label">Recurring:</div>
-                <div><?php echo htmlspecialchars($event['recurring']); ?></div>
+                
             </div>
             <div>
                 <div class="event-info-label">Price:</div>

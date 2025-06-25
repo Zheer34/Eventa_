@@ -33,20 +33,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("You must be logged in to make a payment.");
     }
 
-    $amount = $event['price'];
+    $cardholderName = $_POST['cardholder_name'] ?? '';
+    $cardNumber = $_POST['card_number'] ?? '';
+    $expiryDate = $_POST['expiry_date'] ?? '';
+    $cvv = $_POST['cvv'] ?? '';
 
-    // Insert payment record
-    $stmt = $pdo->prepare("INSERT INTO payments (user_id, event_id, amount) VALUES (:user_id, :event_id, :amount)");
-    if ($stmt->execute([':user_id' => $user_id, ':event_id' => $event_id, ':amount' => $amount])) {
-        // Add user to event participants
-        $stmt = $pdo->prepare("INSERT INTO event_participants (user_id, event_id) VALUES (:user_id, :event_id)");
-        $stmt->execute([':user_id' => $user_id, ':event_id' => $event_id]);
-
-        // Redirect to my_events.php with a confirmation message
-        header("Location: my_events.php?payment_success=1");
-        exit;
+    // Validate credit card details
+    if (strlen($cardNumber) !== 16 || !ctype_digit($cardNumber)) {
+        $error = "Invalid credit card number.";
+    } elseif (!preg_match('/^\d{2}\/\d{2}$/', $expiryDate)) {
+        $error = "Invalid expiration date format. Use MM/YY.";
+    } elseif (strlen($cvv) !== 3 || !ctype_digit($cvv)) {
+        $error = "Invalid CVV.";
     } else {
-        $error = "Payment failed. Please try again.";
+        $amount = $event['price'];
+
+        // Insert payment record
+        $stmt = $pdo->prepare("INSERT INTO payments (user_id, event_id, amount) VALUES (:user_id, :event_id, :amount)");
+        if ($stmt->execute([':user_id' => $user_id, ':event_id' => $event_id, ':amount' => $amount])) {
+            // Add user to event participants
+            $stmt = $pdo->prepare("INSERT INTO event_participants (user_id, event_id) VALUES (:user_id, :event_id)");
+            $stmt->execute([':user_id' => $user_id, ':event_id' => $event_id]);
+
+            // Redirect to my_events.php with a confirmation message
+            header("Location: my_events.php?payment_success=1");
+            exit;
+        } else {
+            $error = "Payment failed. Please try again.";
+        }
     }
 }
 ?>
@@ -57,6 +71,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Payment for <?php echo htmlspecialchars($event['title']); ?></title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .payment-form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .payment-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .payment-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .payment-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #66a1ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .payment-form button:hover {
+            background-color: #4d8ae6;
+        }
+
+        .error-msg {
+            color: red;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
     <h2>Payment for <?php echo htmlspecialchars($event['title']); ?></h2>
@@ -66,8 +123,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="error-msg"><?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
 
-    <form method="post">
-        <button type="submit" class="btn">Pay $<?php echo number_format($event['price'], 2); ?></button>
+    <form method="post" class="payment-form">
+        <label for="cardholder_name">Cardholder Name</label>
+        <input type="text" id="cardholder_name" name="cardholder_name" placeholder="John Doe" required>
+
+        <label for="card_number">Card Number</label>
+        <input type="text" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" maxlength="16" required>
+
+        <label for="expiry_date">Expiration Date (MM/YY)</label>
+        <input type="text" id="expiry_date" name="expiry_date" placeholder="MM/YY" required>
+
+        <label for="cvv">CVV</label>
+        <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="3" required>
+
+        <button type="submit">Pay $<?php echo number_format($event['price'], 2); ?></button>
     </form>
 </body>
 </html>

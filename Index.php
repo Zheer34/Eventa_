@@ -19,7 +19,7 @@ session_start();
 
     <a href="#contact" class="btn" style="position: absolute; top: 1rem; left: 1rem;">Get in touch</a>
     <a href="events.html" class="btn" style="margin-left: 10px;">Events</a>
-    <a href="SignUp_LogIn_Form.html" id="auth-link" class="btn" style="position: absolute; top: 1rem; right: 1rem;">Login</a>
+    <a href="SignUp_LogIn_Form.php" id="auth-link" class="btn" style="position: absolute; top: 1rem; right: 1rem;">Login</a>
     <a href="my_events.php" class="btn">My Events</a>
     <a href="organizers.php" class="btn" style="margin-left: 10px;">Organizers</a>
     
@@ -145,7 +145,7 @@ session_start();
           authLink.href = 'logout.php';
         } else {
           authLink.textContent = 'Login';
-          authLink.href = 'SignUp_LogIn_Form.html';
+          authLink.href = 'SignUp_LogIn_Form.php';
         }
       } catch (error) {
         console.error('Error fetching user info:', error);

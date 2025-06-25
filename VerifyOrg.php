@@ -55,10 +55,11 @@ $organizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($organizers as $organizer): ?>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #ccc;"><?php echo htmlspecialchars($organizer['username']); ?></td>
+                        
                         <td style="padding: 10px; border: 1px solid #ccc;">
-                            <form method="post">
+                            <form method="get" action="view_organizer.php">
                                 <input type="hidden" name="user_id" value="<?php echo $organizer['id']; ?>">
-                                <button type="submit" name="verify" class="btn">Verify</button>
+                                <button type="submit" class="btn">View</button>
                             </form>
                         </td>
                     </tr>

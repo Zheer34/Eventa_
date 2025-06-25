@@ -134,6 +134,7 @@ footer {
   font-family: 'Arial', sans-serif;
   display: none;
   animation: fadeIn 0.3s ease;
+  color: black; /* Ensure text is black */
 }
 
 @keyframes fadeIn {

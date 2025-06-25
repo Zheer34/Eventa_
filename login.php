@@ -24,24 +24,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute([$user]);
     $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($userData && hash('sha256', $pass) === $userData['password']) {
-        if ($userData['verified'] === 'no') {
-            $_SESSION['error'] = "Your account is not verified yet. Please wait for admin approval.";
-            header("Location: SignUp_LogIn_Form.html");
-            exit();
-        }
-
-        // Store user information in the session
-        $_SESSION['user_id'] = $userData['id'];
-        $_SESSION['username'] = $userData['username'];
-        $_SESSION['role'] = $userData['role'];
-
-        header("Location: index.php");
-        exit();
-    } else {
-        $_SESSION['error'] = "Invalid username or password.";
-        header("Location: SignUp_LogIn_Form.html");
+    if (!$userData) {
+        $_SESSION['error'] = "Invalid username.";
+        header("Location: SignUp_LogIn_Form.php");
         exit();
     }
+
+    if (hash('sha256', $pass) !== $userData['password']) {
+        $_SESSION['error'] = "Invalid password.";
+        header("Location: SignUp_LogIn_Form.php");
+        exit();
+    }
+
+    if ($userData['verified'] === 'no') {
+        $_SESSION['error'] = "Your account is not verified yet. Please wait for admin approval.";
+        header("Location: SignUp_LogIn_Form.php");
+        exit();
+    }
+
+    // Store user information in the session
+    $_SESSION['user_id'] = $userData['id'];
+    $_SESSION['username'] = $userData['username'];
+    $_SESSION['role'] = $userData['role'];
+
+    header("Location: index.php");
+    exit();
 }
 ?>
