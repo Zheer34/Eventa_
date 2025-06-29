@@ -51,45 +51,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify'])) {
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         body {
-            background-color: #f8f9fa;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #66a1ff 0%, #764ba2 100%);
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
         }
         
-        .header {
-            background: linear-gradient(135deg, #66a1ff, #4d8ae6);
-            color: white;
+        .header-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
             padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
             text-align: center;
-            position: relative;
         }
         
-        .header h1 {
-            margin: 0;
+        .header-card h1 {
+            color: #333;
+            margin: 0 0 15px 0;
             font-size: 2.5rem;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
         
-        .header .username {
+        .username {
             font-size: 1.2rem;
-            margin-top: 10px;
-            opacity: 0.9;
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 15px;
         }
         
         .status-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            display: inline-block;
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 0.9rem;
@@ -98,31 +101,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify'])) {
         }
         
         .status-verified {
-            background-color: #28a745;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
             color: white;
         }
         
         .status-pending {
-            background-color: #ffc107;
-            color: #212529;
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            color: white;
         }
         
-        .content {
-            padding: 40px;
+        .content-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
         }
         
         .success-message {
-            background-color: #d4edda;
-            color: #155724;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
             padding: 15px 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             margin-bottom: 30px;
-            border-left: 4px solid #28a745;
             font-weight: 500;
-        }
-        
-        .success-message i {
-            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .info-grid {
@@ -132,9 +137,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify'])) {
         }
         
         .info-item {
-            background-color: #f8f9fa;
+            background: #f8f9fa;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             border-left: 4px solid #66a1ff;
         }
         
@@ -156,32 +161,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify'])) {
         .cv-section {
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 15px;
             text-align: center;
             border: 2px dashed #dee2e6;
+            margin-bottom: 30px;
         }
         
         .cv-available {
-            border-color: #28a745;
-            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-color: #00b894;
+            background: linear-gradient(135deg, #d1f2eb, #a3e4d7);
         }
         
         .cv-btn {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background-color: #66a1ff;
+            background: linear-gradient(135deg, #66a1ff 0%, #764ba2 100%);
             color: white;
             padding: 12px 25px;
-            border-radius: 8px;
+            border-radius: 15px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 161, 255, 0.3);
         }
         
         .cv-btn:hover {
-            background-color: #4d8ae6;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 161, 255, 0.4);
         }
@@ -195,16 +199,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify'])) {
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 30px;
             flex-wrap: wrap;
         }
         
         .btn-primary {
-            background-color: #28a745;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
             color: white;
             padding: 12px 30px;
             border: none;
-            border-radius: 8px;
+            border-radius: 15px;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
@@ -215,16 +218,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify'])) {
         }
         
         .btn-primary:hover {
-            background-color: #218838;
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
         }
         
         .btn-secondary {
-            background-color: #6c757d;
+            background: rgba(255,255,255,0.2);
             color: white;
+            border: 2px solid rgba(255,255,255,0.3);
             padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
+            border-radius: 15px;
             font-weight: 600;
             font-size: 1rem;
             text-decoration: none;
@@ -235,43 +238,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify'])) {
         }
         
         .btn-secondary:hover {
-            background-color: #5a6268;
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
             transform: translateY(-2px);
         }
         
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
-                border-radius: 10px;
             }
             
-            .header {
+            .header-card, .content-card {
                 padding: 20px;
+                border-radius: 15px;
             }
             
-            .header h1 {
+            .header-card h1 {
                 font-size: 2rem;
-            }
-            
-            .content {
-                padding: 20px;
             }
             
             .action-buttons {
                 flex-direction: column;
-            }
-            
-            .status-badge {
-                position: static;
-                margin-top: 15px;
-                display: inline-block;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <div class="header-card">
             <h1><i class='bx bxs-user-detail'></i> Organizer Details</h1>
             <div class="username">@<?php echo htmlspecialchars($user['username']); ?></div>
             <div class="status-badge <?php echo $user['verified'] === 'yes' ? 'status-verified' : 'status-pending'; ?>">
@@ -279,14 +273,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify'])) {
             </div>
         </div>
         
-        <div class="content">
-            <?php if (isset($successMessage)): ?>
-                <div class="success-message">
-                    <i class='bx bxs-check-circle'></i>
-                    <?php echo htmlspecialchars($successMessage); ?>
-                </div>
-            <?php endif; ?>
-            
+        <?php if (isset($successMessage)): ?>
+            <div class="success-message">
+                <i class='bx bxs-check-circle'></i>
+                <?php echo htmlspecialchars($successMessage); ?>
+            </div>
+        <?php endif; ?>
+        
+        <div class="content-card">
             <div class="info-grid">
                 <div class="info-item">
                     <div class="info-label">
