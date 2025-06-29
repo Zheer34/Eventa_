@@ -348,7 +348,7 @@ function addNotification($pdo, $message) {
 
             <div class="form-row" style="margin-top: 10px;">
                 <button type="submit" class="btn"><?php echo $editEvent ? 'Update Event' : 'Create Event'; ?></button>
-                <button type="button" class="btn" onclick="window.location.href='events.html';">Back to Events</button>
+                <button type="button" class="btn" onclick="window.location.href='events.php';">Back to Events</button>
             </div>
         </form>
     </div>

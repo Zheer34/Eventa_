@@ -24,6 +24,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $organization = $_POST['organization'] ?? null;
     $pastExperience = $_POST['past_experience'] ?? null;
 
+    // Handle CV file upload for event organizers
+    $cvPath = null;
+    if ($role === 'event_organizer' && isset($_FILES['cv_file']) && $_FILES['cv_file']['error'] == 0) {
+        $targetDir = "uploads/cv/";
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+        
+        $fileInfo = pathinfo($_FILES["cv_file"]["name"]);
+        $fileExtension = strtolower($fileInfo['extension']);
+        
+        // Validate file type
+        if ($fileExtension !== 'pdf') {
+            $_SESSION['error'] = "Only PDF files are allowed for CV upload.";
+            header("Location: SignUp_LogIn_Form.php");
+            exit();
+        }
+        
+        // Validate file size (5MB max)
+        if ($_FILES["cv_file"]["size"] > 5242880) {
+            $_SESSION['error'] = "CV file size must be less than 5MB.";
+            header("Location: SignUp_LogIn_Form.php");
+            exit();
+        }
+        
+        $fileName = uniqid() . '_cv_' . $user . '.pdf';
+        $targetFilePath = $targetDir . $fileName;
+        
+        if (move_uploaded_file($_FILES["cv_file"]["tmp_name"], $targetFilePath)) {
+            $cvPath = $targetFilePath;
+        } else {
+            $_SESSION['error'] = "Failed to upload CV file.";
+            header("Location: SignUp_LogIn_Form.php");
+            exit();
+        }
+    }
+
     // Check username and password length
     if (strlen($user) > 15) {
         $_SESSION['error'] = "Username cannot exceed 15 characters.";
@@ -53,8 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $verified = ($role === 'event_organizer') ? 'no' : 'yes';
 
     // Insert new user into database
-    $stmt = $pdo->prepare("INSERT INTO users (username, password, role, verified, full_name, organization, past_experience) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    if ($stmt->execute([$user, $hashedPass, $role, $verified, $fullName, $organization, $pastExperience])) {
+    $stmt = $pdo->prepare("INSERT INTO users (username, password, role, verified, full_name, organization, past_experience, cv_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    if ($stmt->execute([$user, $hashedPass, $role, $verified, $fullName, $organization, $pastExperience, $cvPath])) {
         $_SESSION['success'] = "Registration successful. Please log in.";
         header("Location: SignUp_LogIn_Form.php");
         exit();

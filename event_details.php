@@ -73,207 +73,405 @@ if (isset($_SESSION['username'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($event['title']); ?> - Event Details</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="Login_Form.css">
     <style>
-        .event-details {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 25px 30px;
-            border-radius: 12px;
-            border: 1px solid #ccc;
-            background: #f9f9f9;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #66a1ff 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
         }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .nav-btn {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
         .event-header {
+            position: relative;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
-            gap: 25px;
-            margin-bottom: 25px;
+            justify-content: center;
+            color: white;
+            overflow: hidden;
         }
+
         .event-header img {
-            width: 160px;
-            height: 120px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #ddd;
+            opacity: 0.8;
         }
+
+        .event-header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+        }
+
         .event-title {
-            font-size: 2rem;
-            margin: 0;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
-        .event-info-grid {
+
+        .event-category {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+        }
+
+        .event-content {
+            padding: 30px;
+        }
+
+        .info-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px 32px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
-        .event-info-label {
-            font-weight: bold;
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
             color: #333;
         }
-        .event-section-card {
-            background: #fff;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-            padding: 18px 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+
+        .description-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
         }
-        .event-section-card h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-            color: #007bff;
+
+        .description-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
         }
-        .event-section-card ul {
-            margin: 0;
-            padding-left: 20px;
+
+        .description-card p {
+            line-height: 1.6;
+            color: #555;
         }
+
+        .details-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+        }
+
+        .detail-card h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detail-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-card li:last-child {
+            border-bottom: none;
+        }
+
+        .actions-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
         .btn {
-            padding: 8px 18px;
-            background-color: #007bff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 5px;
+            padding: 15px 30px;
+            border-radius: 25px;
             cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
-            margin-top: 10px;
-            margin-right: 10px;
+            margin: 5px;
             font-size: 1rem;
         }
-        .participation-msg {
-            background: #d4edda;
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
             color: #155724;
             border: 1px solid #c3e6cb;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 6px;
         }
-        .error-msg {
-            background: #f8d7da;
+
+        .message.error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
             color: #721c24;
             border: 1px solid #f5c6cb;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 6px;
         }
-        @media (max-width: 600px) {
-            .event-info-grid {
+
+        .price-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .event-title {
+                font-size: 2rem;
+            }
+            
+            .info-grid {
                 grid-template-columns: 1fr;
             }
-            .event-header {
-                flex-direction: column;
-                align-items: flex-start;
+            
+            .details-section {
+                grid-template-columns: 1fr;
             }
-            .event-header img {
+            
+            .actions-section {
+                padding: 20px 15px;
+            }
+            
+            .btn {
                 width: 100%;
-                height: auto;
+                margin: 5px 0;
             }
         }
     </style>
 </head>
 <body>
-    <div class="event-details">
-        <div class="event-header">
-            <?php if ($event['image']): ?>
-                <img src="<?php echo htmlspecialchars($event['image']); ?>" alt="Event Image">
-            <?php endif; ?>
-            <div>
-                <h2 class="event-title"><?php echo htmlspecialchars($event['title']); ?></h2>
-                <div style="color:#666;"><?php echo htmlspecialchars($event['category']); ?></div>
+    <div class="container">
+        <a href="events.php" class="nav-btn">← Back to Events</a>
+        
+        <div class="event-card">
+            <div class="event-header">
+                <?php if ($event['image']): ?>
+                    <img src="<?php echo htmlspecialchars($event['image']); ?>" alt="Event Image">
+                <?php endif; ?>
+                <div class="event-header-content">
+                    <h1 class="event-title"><?php echo htmlspecialchars($event['title']); ?></h1>
+                    <div class="event-category"><?php echo htmlspecialchars($event['category']); ?></div>
+                </div>
+                <div class="price-badge">
+                    <?php echo $event['price'] > 0 ? '$' . number_format($event['price'], 2) : 'FREE'; ?>
+                </div>
             </div>
-        </div>
-        <?php if ($participationMsg): ?>
-            <div class="participation-msg"><?php echo htmlspecialchars($participationMsg); ?></div>
-        <?php endif; ?>
-        <div class="event-info-grid">
-            <div>
-                <div class="event-info-label">Date & Time:</div>
-                <div><?php echo htmlspecialchars($event['date']); ?> at <?php echo htmlspecialchars($event['time']); ?></div>
-            </div>
-            <div>
-                <div class="event-info-label">Location:</div>
-                <div><?php echo htmlspecialchars($event['location']); ?></div>
-            </div>
-            <div>
+            
+            <div class="event-content">
+                <?php if ($participationMsg): ?>
+                    <div class="message success"><?php echo htmlspecialchars($participationMsg); ?></div>
+                <?php endif; ?>
                 
-            </div>
-            <div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">📅 Date & Time</div>
+                        <div class="info-value"><?php echo htmlspecialchars($event['date']); ?> at <?php echo htmlspecialchars($event['time']); ?></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">📍 Location</div>
+                        <div class="info-value"><?php echo htmlspecialchars($event['location']); ?></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">👤 Organizer</div>
+                        <div class="info-value"><?php echo htmlspecialchars($event['organizer_username'] ?? 'Unknown'); ?></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">👁️ Visibility</div>
+                        <div class="info-value"><?php echo ucfirst(htmlspecialchars($event['visibility'])); ?></div>
+                    </div>
+                </div>
                 
+                <div class="description-card">
+                    <h3>📝 Event Description</h3>
+                    <p><?php echo nl2br(htmlspecialchars($event['description'])); ?></p>
+                </div>
+                
+                <div class="details-section">
+                    <div class="detail-card">
+                        <h4>📋 Agenda</h4>
+                        <ul>
+                            <?php
+                            $agendaItems = json_decode($event['agenda'], true);
+                            if (is_array($agendaItems) && !empty($agendaItems)) {
+                                foreach ($agendaItems as $item) {
+                                    echo '<li>• ' . htmlspecialchars($item) . '</li>';
+                                }
+                            } else {
+                                echo '<li>No agenda items available</li>';
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🎤 Speakers</h4>
+                        <ul>
+                            <?php
+                            $speakerItems = json_decode($event['speakers'], true);
+                            if (is_array($speakerItems) && !empty($speakerItems)) {
+                                foreach ($speakerItems as $speaker) {
+                                    echo '<li>🗣️ ' . htmlspecialchars($speaker) . '</li>';
+                                }
+                            } else {
+                                echo '<li>No speakers announced yet</li>';
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <h4>🏢 Sponsors</h4>
+                        <ul>
+                            <?php
+                            $sponsorItems = json_decode($event['sponsors'], true);
+                            if (is_array($sponsorItems) && !empty($sponsorItems)) {
+                                foreach ($sponsorItems as $sponsor) {
+                                    echo '<li>🤝 ' . htmlspecialchars($sponsor) . '</li>';
+                                }
+                            } else {
+                                echo '<li>No sponsors listed</li>';
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div>
-                <div class="event-info-label">Price:</div>
-                <div><?php echo $event['price'] > 0 ? '$' . number_format($event['price'], 2) : 'Free'; ?></div>
-            </div>
         </div>
-        <div class="event-section-card">
-            <h3>Description</h3>
-            <p><?php echo nl2br(htmlspecialchars($event['description'])); ?></p>
-        </div>
-        <div class="event-section-card">
-            <h3>Agenda</h3>
-            <ul>
-                <?php
-                $agendaItems = json_decode($event['agenda'], true);
-                if (is_array($agendaItems)) {
-                    foreach ($agendaItems as $item) {
-                        echo '<li>' . htmlspecialchars($item) . '</li>';
-                    }
-                }
-                ?>
-            </ul>
-        </div>
-        <div class="event-section-card">
-            <h3>Speakers</h3>
-            <ul>
-                <?php
-                $speakerItems = json_decode($event['speakers'], true);
-                if (is_array($speakerItems)) {
-                    foreach ($speakerItems as $speaker) {
-                        echo '<li>' . htmlspecialchars($speaker) . '</li>';
-                    }
-                }
-                ?>
-            </ul>
-        </div>
-        <div class="event-section-card">
-            <h3>Sponsors</h3>
-            <ul>
-                <?php
-                $sponsorItems = json_decode($event['sponsors'], true);
-                if (is_array($sponsorItems)) {
-                    foreach ($sponsorItems as $sponsor) {
-                        echo '<li>' . htmlspecialchars($sponsor) . '</li>';
-                    }
-                }
-                ?>
-            </ul>
-        </div>
-        <a href="events.html" class="btn">Back to Events</a>
-        <?php if (isset($_SESSION['username']) && $_SESSION['username'] === $event['organizer_username']): ?>
-            <a href="event_form.php?id=<?php echo $event['id']; ?>" class="btn">Edit Event</a>
-        <?php endif; ?>
-        <?php if (isset($_SESSION['username']) && $userRole === 'user'): ?>
-            <form method="post" style="display:inline;">
-                <button type="submit" name="participate" class="btn" <?php if ($userParticipating) echo 'disabled'; ?>>
-                    <?php echo $userParticipating ? 'Participating' : 'Participate'; ?>
-                </button>
-            </form>
-            <?php if ($userParticipating): ?>
-                <a href="chat.php?event=<?php echo urlencode($event['title']); ?>" class="btn">Join Chat</a>
+        
+        <div class="actions-section">
+            <?php if (isset($_SESSION['username']) && $_SESSION['username'] === $event['organizer_username']): ?>
+                <a href="event_form.php?id=<?php echo $event['id']; ?>" class="btn btn-secondary">✏️ Edit Event</a>
             <?php endif; ?>
-        <?php elseif (!isset($_SESSION['username'])): ?>
-            <div class="error-msg">
-                You need to log in to participate in this event.
-            </div>
-        <?php elseif ($userRole !== 'user'): ?>
-            <div class="error-msg">
-                Only normal users can participate in events.
-            </div>
-        <?php endif; ?>
+            
+            <?php if (isset($_SESSION['username']) && $userRole === 'user'): ?>
+                <form method="post" style="display:inline;">
+                    <button type="submit" name="participate" class="btn" <?php if ($userParticipating) echo 'disabled'; ?>>
+                        <?php echo $userParticipating ? '✅ Participating' : '🎟️ Join Event'; ?>
+                    </button>
+                </form>
+                <?php if ($userParticipating): ?>
+                    <a href="chat.php?event=<?php echo urlencode($event['title']); ?>" class="btn btn-success">💬 Join Chat</a>
+                <?php endif; ?>
+            <?php elseif (!isset($_SESSION['username'])): ?>
+                <div class="message error">
+                    🔒 You need to log in to participate in this event.
+                </div>
+                <a href="SignUp_LogIn_Form.php" class="btn">🔑 Login to Join</a>
+            <?php elseif ($userRole !== 'user'): ?>
+                <div class="message error">
+                    ℹ️ Only regular users can participate in events.
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
 </body>
 </html>

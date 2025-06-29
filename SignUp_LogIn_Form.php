@@ -38,7 +38,7 @@ session_start();
           </div>
 
           <div class="form-box register">
-              <form action="register.php" method="POST">
+              <form action="register.php" method="POST" enctype="multipart/form-data">
                   <h1>Registration</h1>
                   <div class="input-box">
                       <input type="text" name="username" placeholder="Username" required>
@@ -69,7 +69,11 @@ session_start();
                     <i class='bx bxs-buildings'></i>
                 </div>
                 <div class="input-box">
-                    <textarea name="past_experience" placeholder="Describe your past experiences" rows="3"></textarea>
+                    <textarea name="past_experience" placeholder="Describe your past experiences" rows="2"></textarea>
+                </div>
+                <div class="input-box">
+                    <label for="cv_file" style="display: block; margin-bottom: 3px; color: #666; font-size: 12px;">Upload CV (PDF only):</label>
+                    <input type="file" name="cv_file" id="cv_file" accept=".pdf" style="padding: 6px; border: 2px dashed #ccc; border-radius: 5px; width: 100%; box-sizing: border-box; font-size: 11px; background-color: #f9f9f9;">
                 </div>
             </div>
             
